@@ -21,61 +21,110 @@ public class Utils {
     public static Scanner sc = new Scanner(System.in);
     public static String status = null;
     public static int i = 0;
-    public static void dsiplayEmployee(List<StaffMember> employees) {
-        Table t = new Table(9, BorderStyle.UNICODE_BOX_DOUBLE_BORDER, ShownBorders.ALL);
-        CellStyle cellStyle = new CellStyle(CellStyle.HorizontalAlign.center);
-        t.addCell("      DISPLAY EMPLOYEE      ", cellStyle, 9);
-        t.addCell("      TYPE      ", cellStyle);
-        t.addCell("      ID        ", cellStyle);
-        t.addCell("      NAME      ", cellStyle);
-        t.addCell("      ADDRESS      ", cellStyle);
-        t.addCell("      SALARY      ", cellStyle);
-        t.addCell("      BONUS      ", cellStyle);
-        t.addCell("      HOUR      ", cellStyle);
-        t.addCell("      RATE      ", cellStyle);
-        t.addCell("      PAYMENT      ", cellStyle);
-        for (int i = 0; i < employees.size(); i++) {
-            StaffMember emp = employees.get(i);
-            String type = "Unknown";
-            if (emp instanceof Volunteer) {
-                Volunteer v = (Volunteer) emp;
-                type = "Volunteer";
-                t.addCell(type, cellStyle);
-                t.addCell(String.valueOf(emp.getId()), cellStyle);
-                t.addCell(emp.getName(), cellStyle);
-                t.addCell(emp.getAddress(), cellStyle);
-                t.addCell(String.valueOf(v.getSalary()), cellStyle);
-                t.addCell("---", cellStyle);
-                t.addCell("---", cellStyle);
-                t.addCell("---", cellStyle);
-                t.addCell(String.valueOf(v.Pay()), cellStyle);
-            } else if (emp instanceof SalariedEmployee) {
-                SalariedEmployee s = (SalariedEmployee) emp;
-                type = "Salaried Employee";
-                t.addCell(type, cellStyle);
-                t.addCell(String.valueOf(emp.getId()), cellStyle);
-                t.addCell(emp.getName(), cellStyle);
-                t.addCell(emp.getAddress(), cellStyle);
-                t.addCell(String.valueOf(s.getSalary()), cellStyle);
-                t.addCell(String.valueOf(s.getBonus()), cellStyle);
-                t.addCell("---", cellStyle);
-                t.addCell("---", cellStyle);
-                t.addCell(String.valueOf(s.Pay()), cellStyle);
-            } else if (emp instanceof HourlySalaryEmployee) {
-                HourlySalaryEmployee h = (HourlySalaryEmployee) emp;
-                type = "Hourly Employee";
-                t.addCell(type, cellStyle);
-                t.addCell(String.valueOf(emp.getId()), cellStyle);
-                t.addCell(emp.getName(), cellStyle);
-                t.addCell(emp.getAddress(), cellStyle);
-                t.addCell("---", cellStyle);
-                t.addCell("---", cellStyle);
-                t.addCell(String.valueOf(h.getHourWorked()), cellStyle);
-                t.addCell(String.valueOf(h.getRate()), cellStyle);
-                t.addCell(String.valueOf(h.Pay()), cellStyle);
+
+    public static void displayEmployee(List<StaffMember> employees) {
+        final int PAGE_SIZE = 3; // Number of employees per page
+        Scanner scanner = new Scanner(System.in);
+        int currentPage = 1;
+        int totalPages = (int) Math.ceil((double) employees.size() / PAGE_SIZE);
+
+        while (true) {
+            System.out.print("\033[H\033[2J");
+            System.out.flush();
+
+            Table t = new Table(9, BorderStyle.UNICODE_BOX_DOUBLE_BORDER, ShownBorders.ALL);
+            CellStyle cellStyle = new CellStyle(CellStyle.HorizontalAlign.center);
+
+            t.addCell("      DISPLAY EMPLOYEE (Page: " + currentPage + "/" + totalPages + ")      ", cellStyle, 9);
+            t.addCell("      TYPE      ", cellStyle);
+            t.addCell("      ID        ", cellStyle);
+            t.addCell("      NAME      ", cellStyle);
+            t.addCell("      ADDRESS      ", cellStyle);
+            t.addCell("      SALARY      ", cellStyle);
+            t.addCell("      BONUS      ", cellStyle);
+            t.addCell("      HOUR      ", cellStyle);
+            t.addCell("      RATE      ", cellStyle);
+            t.addCell("      PAYMENT      ", cellStyle);
+
+            // Calculate indices for pagination
+            int startIndex = (currentPage - 1) * PAGE_SIZE;
+            int endIndex = Math.min(startIndex + PAGE_SIZE, employees.size());
+
+            // Display only employees within the current page
+            for (int i = startIndex; i < endIndex; i++) {
+                StaffMember emp = employees.get(i);
+                String type = "Unknown";
+
+                if (emp instanceof Volunteer) {
+                    Volunteer v = (Volunteer) emp;
+                    type = "Volunteer";
+                    t.addCell(type, cellStyle);
+                    t.addCell(String.valueOf(emp.getId()), cellStyle);
+                    t.addCell(emp.getName(), cellStyle);
+                    t.addCell(emp.getAddress(), cellStyle);
+                    t.addCell(String.valueOf(v.getSalary()), cellStyle);
+                    t.addCell("---", cellStyle);
+                    t.addCell("---", cellStyle);
+                    t.addCell("---", cellStyle);
+                    t.addCell(String.valueOf(v.Pay()), cellStyle);
+                } else if (emp instanceof SalariedEmployee) {
+                    SalariedEmployee s = (SalariedEmployee) emp;
+                    type = "Salaried Employee";
+                    t.addCell(type, cellStyle);
+                    t.addCell(String.valueOf(emp.getId()), cellStyle);
+                    t.addCell(emp.getName(), cellStyle);
+                    t.addCell(emp.getAddress(), cellStyle);
+                    t.addCell(String.valueOf(s.getSalary()), cellStyle);
+                    t.addCell(String.valueOf(s.getBonus()), cellStyle);
+                    t.addCell("---", cellStyle);
+                    t.addCell("---", cellStyle);
+                    t.addCell(String.valueOf(s.Pay()), cellStyle);
+                } else if (emp instanceof HourlySalaryEmployee) {
+                    HourlySalaryEmployee h = (HourlySalaryEmployee) emp;
+                    type = "Hourly Employee";
+                    t.addCell(type, cellStyle);
+                    t.addCell(String.valueOf(emp.getId()), cellStyle);
+                    t.addCell(emp.getName(), cellStyle);
+                    t.addCell(emp.getAddress(), cellStyle);
+                    t.addCell("---", cellStyle);
+                    t.addCell("---", cellStyle);
+                    t.addCell(String.valueOf(h.getHourWorked()), cellStyle);
+                    t.addCell(String.valueOf(h.getRate()), cellStyle);
+                    t.addCell(String.valueOf(h.Pay()), cellStyle);
+                }
+            }
+
+            // Print the paginated table
+            System.out.println(blue +  t.render() + reset);
+
+            // Show pagination options
+
+            System.out.println("Pages: " + currentPage + "/" + 3);
+            System.out.println("1. First Page \t2. Next Page \t3. Previous Page \t4. Last Page  \t5. Quit");
+            System.out.print("Enter your choice: ");
+
+            String choice = scanner.nextLine().trim();
+
+            switch (choice) {
+                case "1":
+                    currentPage = 1;
+                    break;
+                case "2":
+                    if (currentPage < totalPages) currentPage++;
+                    break;
+                case "3":
+                    if (currentPage > 1) currentPage--;
+                    break;
+                case "4":
+                    currentPage = totalPages;
+                    break;
+                case "5":
+                    scanner.close();
+                    return; // Exit function
+                default:
+                    System.out.println(red + "Invalid input. Please try again." + reset);
             }
         }
-        System.out.println(blue +  t.render() + reset);
     }
     static public void Menu(){
         CellStyle cellStyle = new CellStyle(CellStyle.HorizontalAlign.center);
@@ -88,29 +137,7 @@ public class Utils {
         System.out.println(blue + t.render() + reset);
         System.out.print(green + "Choose an option: " + reset);
     }
-    private static void displayVolunteer(Volunteer volunteer) {
-        System.out.println("id: " + volunteer.getID());
-        System.out.println("name: " + volunteer.getName());
-        System.out.println("address: " + volunteer.getAddress());
-        System.out.println("Salary: " + volunteer.getSalary() + "$");
-        System.out.println("Payment: " + volunteer.Pay() + "$");
-    }
-    private static void displaySalariedEmployee(SalariedEmployee salariedEmployee){
-        System.out.println("id: " + salariedEmployee.getID());
-        System.out.println("name: " + salariedEmployee.getName());
-        System.out.println("address: " + salariedEmployee.getAddress());
-        System.out.println("Bonus: " + salariedEmployee.getBonus() + "$");
-        System.out.println("Salary: " + salariedEmployee.getSalary() + "$");
-        System.out.println("Payment: " + salariedEmployee.Pay() + "$");
-    }
-    public static void displayHourWorked(HourlySalaryEmployee hourlySalaryEmployee){
-        System.out.println("id: " + hourlySalaryEmployee.getId());
-        System.out.println("name: " + hourlySalaryEmployee.getName());
-        System.out.println("address: " + hourlySalaryEmployee.getAddress());
-        System.out.println("Hour work: " + hourlySalaryEmployee.getHourWorked() + "h");
-        System.out.println("Rate: " + hourlySalaryEmployee.getRate() + "$");
-        System.out.println("Payment: " + hourlySalaryEmployee.Pay() + "$");
-    }
+
     public static void insertEmployee(List<StaffMember> StaffMembers){
         String type = "Unknown";
         System.out.println("1. Volunteer\t Salaried\t HourWork\t");
