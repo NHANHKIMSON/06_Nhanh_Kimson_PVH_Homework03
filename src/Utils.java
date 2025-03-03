@@ -93,7 +93,6 @@ public class Utils {
             System.out.println(blue +  t.render() + reset);
             System.out.println("Pages: " + currentPage + "/" + 3);
             System.out.println("1. First Page \t2. Next Page \t3. Previous Page \t4. Last Page  \t5. Quit");
-            System.out.print("Enter your choice: ");
             String choice;
             while (true) {
                 System.out.print("Enter your choice (1-5): ");
@@ -163,9 +162,9 @@ public class Utils {
         System.out.println("Id: " + StaffMember.getCouter());
         String name;
         while(true) {
-            System.out.print("name: ");
+            System.out.print("Enter name: ");
             name = sc.nextLine();
-            if(name.matches("[a-zA-Z]*")){
+            if(name.matches("[a-zA-Z ]*")){
                 break;
             }else {
                 System.out.println(red + "Invalid name. Please try again." + reset);
@@ -175,7 +174,7 @@ public class Utils {
         while(true) {
             System.out.print("Enter address: ");
             address = sc.nextLine();
-            if(address.matches("[a-zA-Z]*")){
+            if(address.matches("[a-zA-Z ]*")){
                 break;
             }else {
                 System.out.println(red + "Invalid address. Please try again." + reset);
@@ -196,7 +195,7 @@ public class Utils {
         while(true) {
             System.out.print("Enter name: ");
             name = sc.nextLine();
-            if(name.matches("[a-zA-Z]*")){
+            if(name.matches("[a-zA-Z ]*")){
                 break;
             }else {
                 System.out.println(red + "Invalid name. Please try again." + reset);
@@ -206,7 +205,7 @@ public class Utils {
         while(true) {
             System.out.print("Enter address: ");
             address = sc.nextLine();
-            if(address.matches("[a-zA-Z]*")){
+            if(address.matches("[a-zA-Z ]*")){
                 break;
             }else {
                 System.out.println(red + "Invalid address. Please try again." + reset);
@@ -240,7 +239,7 @@ public class Utils {
         while(true) {
             System.out.print("Enter name: ");
             name = sc.nextLine();
-            if(name.matches("[a-zA-Z]*")){
+            if(name.matches("[a-zA-Z ]*")){
                 break;
             }else {
                 System.out.println(red + "Invalid name. Please try again." + reset);
@@ -250,7 +249,7 @@ public class Utils {
         while(true) {
             System.out.print("Enter address: ");
             address = sc.nextLine();
-            if(address.matches("[a-zA-Z]*")){
+            if(address.matches("[a-zA-Z ]*")){
                 break;
             }else {
                 System.out.println(red + "Invalid address. Please try again." + reset);
@@ -312,7 +311,14 @@ public class Utils {
     }
     public static void UpdateEmployee(List<StaffMember> employees) {
         System.out.print("Enter id of Employee to update: ");
-        int id_update = Integer.parseInt(sc.nextLine());
+        String id = sc.nextLine();
+        while (true) {
+            if(id.matches("[0-9]*")){
+                break;
+            }else System.out.println(red + "Invalid id. Please try again." + reset);
+        }
+        int id_update = Integer.parseInt(id);
+        String status = "";
         for (i = 0; i < employees.size(); i++){
             StaffMember emp = employees.get(i);
             if (emp.getId() == id_update){
@@ -348,17 +354,36 @@ public class Utils {
                         String column = sc.nextLine();
                         switch (column) {
                             case "1":
-                                System.out.print(blue + "Enter New Name: " + reset);
-                                volunteer.setName(sc.nextLine());
+                                while (true){
+                                    System.out.print(blue + "Enter New Name: " + reset);
+                                    String newName = sc.nextLine();
+                                    if(newName.matches("^[A-Za-z ]+$")){
+                                        volunteer.setName(newName);
+                                        break;
+                                    }else System.out.println(red + "Invalid name. Please try again." + reset);
+                                }
                                 break;
                             case "2":
-                                System.out.print(blue + "Enter New Address: " + reset);
-                                volunteer.setAddress(sc.nextLine());
+                                while (true){
+                                    System.out.print(blue + "Enter New Address: " + reset);
+                                    String newAddress = sc.nextLine();
+                                    if(newAddress.matches("[A-Z]*")){
+                                        volunteer.setAddress(newAddress);
+                                        break;
+                                    }else {
+                                        System.out.println("Invalid Address. Please try again." + reset);
+                                    }
+                                }
                                 break;
                             case "3":
-                                System.out.print(blue + "Enter New Salary: " + reset);
-                                volunteer.setSalary(sc.nextDouble());
-                                sc.nextLine();
+                                while (true){
+                                    System.out.print(blue + "Enter New Salary: " + reset);
+                                    String newSalary = sc.nextLine();
+                                    if(newSalary.matches("[0-9]*")){
+                                        volunteer.setSalary(Double.parseDouble(newSalary));
+                                        break;
+                                    }else System.out.println(red + "Invalid salary. Please try again." + reset);
+                                }
                                 break;
                             case "0":
                                 return;
@@ -400,22 +425,44 @@ public class Utils {
                         String column = sc.nextLine();
                         switch (column) {
                             case "1":
-                                System.out.print(blue + "Enter New Name: " + reset);
-                                salariedEmployee.setName(sc.nextLine());
+                                while (true){
+                                    System.out.print(blue + "Enter New Name: " + reset);
+                                    String newName = sc.nextLine();
+                                    if(newName.matches("^[A-Za-z ]+$")){
+                                        salariedEmployee.setName(newName);
+                                        break;
+                                    }else System.out.println(red + "Invalid name. Please try again." + reset);
+                                }
                                 break;
                             case "2":
-                                System.out.print(blue + "Enter New Address: " + reset);
-                                salariedEmployee.setAddress(sc.nextLine());
+                                while (true){
+                                    System.out.print(blue + "Enter New Address: " + reset);
+                                    String newAddress = sc.nextLine();
+                                    if(newAddress.matches("^[A-Za-z ]+$")){
+                                        salariedEmployee.setAddress(newAddress);
+                                        break;
+                                    }else System.out.println(red + "Invalid address. Please try again." + reset);
+                                }
                                 break;
                             case "3":
-                                System.out.print(blue + "Enter New Salary: " + reset);
-                                salariedEmployee.setSalary(sc.nextDouble());
-                                sc.nextLine();
+                                while (true){
+                                    System.out.print(blue + "Enter New Salary: " + reset);
+                                    String newSalary = sc.nextLine();
+                                    if(newSalary.matches("[0-9]*")){
+                                        salariedEmployee.setSalary(Double.parseDouble(newSalary));
+                                        break;
+                                    }else System.out.println(red + "Invalid salary. Please try again." + reset);
+                                }
                                 break;
                             case "4":
-                                System.out.print(blue + "Enter Bonus: " + reset);
-                                salariedEmployee.setBonus(sc.nextDouble());
-                                sc.nextLine();
+                                while (true){
+                                    System.out.print(blue + "Enter New Bonus: " + reset);
+                                    String newBonus = sc.nextLine();
+                                    if(newBonus.matches("[0-9]*")){
+                                        salariedEmployee.setBonus(Double.parseDouble(newBonus));
+                                        break;
+                                    }else System.out.println(red + "Invalid bonus. Please try again." + reset);
+                                }
                                 break;
                             case "0":
                                 return;
@@ -457,24 +504,46 @@ public class Utils {
                         String column = sc.nextLine();
                         switch (column) {
                             case "1":
-                                System.out.print(blue + "Enter New Name: " + reset);
-                                hourlyEmployee.setName(sc.nextLine());
+                                while (true){
+                                    System.out.print(blue + "Enter New Name: " + reset);
+                                    String newName = sc.nextLine();
+                                    if(newName.matches("^[A-Za-z ]+$")){
+                                    hourlyEmployee.setName(newName);
+                                    break;
+                                    }else System.out.println(red + "Invalid name. Please try again." + reset);
+                                }
                                 break;
                             case "2":
-                                System.out.print(blue + "Enter New Address: " + reset);
-                                hourlyEmployee.setAddress(sc.nextLine());
+                                while (true){
+                                    System.out.print(blue + "Enter New Address: " + reset);
+                                    String newAddress = sc.nextLine();
+                                    if(newAddress.matches("^[A-Za-z ]+$")){
+                                        hourlyEmployee.setAddress(newAddress);
+                                        break;
+                                    }else System.out.println(red + "Invalid address. Please try again." + reset);
+                                }
                                 break;
                             case "3":
-                                System.out.print(blue + "Enter New Salary: " + reset);
-                                hourlyEmployee.setHourWorked(sc.nextInt());
-                                sc.nextLine();
+                                while (true){
+                                    System.out.print(blue + "Enter New Hour: " + reset);
+                                    String newHour = sc.nextLine();
+                                    if(newHour.matches("[0-9]*")){
+                                        hourlyEmployee.setHourWorked(Integer.parseInt(newHour));
+                                        break;
+                                    }else System.out.println(red + "Invalid hour. Please try again." + reset);
+                                }
                                 break;
                             case "4":
-                                System.out.print(blue + "Enter New Rate: " + reset);
-                                hourlyEmployee.setRate(sc.nextDouble());
-                                sc.nextLine();
+                                while (true){
+                                    System.out.print(blue + "Enter New Rate: " + reset);
+                                    String newRate = sc.nextLine();
+                                    if(newRate.matches("[0-9]*")){
+                                        hourlyEmployee.setRate(Double.parseDouble(newRate));
+                                        break;
+                                    }else System.out.println(red + "Invalid rate. Please try again." + reset);
+                                }
                                 break;
-                            case "5":
+                            case "0":
                                 return;
                             default:
                                 System.out.println(red + "Invalid column" + reset);
@@ -482,7 +551,10 @@ public class Utils {
                         }
                     }while (true);
                 }
+            }else {
+                status = "Id not found. Please try again.";
             }
         }
+        System.out.println(red + status + reset);
     }
 }
