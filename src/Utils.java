@@ -46,15 +46,12 @@ public class Utils {
             t.addCell("      RATE      ", cellStyle);
             t.addCell("      PAYMENT      ", cellStyle);
 
-            // Calculate indices for pagination
             int startIndex = (currentPage - 1) * PAGE_SIZE;
             int endIndex = Math.min(startIndex + PAGE_SIZE, employees.size());
 
-            // Display only employees within the current page
             for (int i = startIndex; i < endIndex; i++) {
                 StaffMember emp = employees.get(i);
                 String type = "Unknown";
-
                 if (emp instanceof Volunteer) {
                     Volunteer v = (Volunteer) emp;
                     type = "Volunteer";
@@ -93,18 +90,16 @@ public class Utils {
                     t.addCell(String.valueOf(h.Pay()), cellStyle);
                 }
             }
-
-            // Print the paginated table
             System.out.println(blue +  t.render() + reset);
-
-            // Show pagination options
-
             System.out.println("Pages: " + currentPage + "/" + 3);
             System.out.println("1. First Page \t2. Next Page \t3. Previous Page \t4. Last Page  \t5. Quit");
             System.out.print("Enter your choice: ");
-
-            String choice = scanner.nextLine().trim();
-
+            String choice;
+            while (true) {
+                System.out.print("Enter your choice (1-5): ");
+                if ((choice = scanner.nextLine().trim()).matches("[1-5]")) break;
+                System.out.println(red + "❌ Invalid input! Please enter a number between 1 and 5." + reset);
+            }
             switch (choice) {
                 case "1":
                     currentPage = 1;
@@ -119,7 +114,6 @@ public class Utils {
                     currentPage = totalPages;
                     break;
                 case "5":
-                    scanner.close();
                     return; // Exit function
                 default:
                     System.out.println(red + "Invalid input. Please try again." + reset);
@@ -140,9 +134,12 @@ public class Utils {
 
     public static void insertEmployee(List<StaffMember> StaffMembers){
         String type = "Unknown";
-        System.out.println("1. Volunteer\t Salaried\t HourWork\t");
-        System.out.print("Enter the type of Employee: ");
-        type = sc.nextLine();
+        System.out.println("1. Volunteer\t2. Salaried\t3. HourWork\t \t4. Back");
+        while (true) {
+            System.out.print("Enter the type of Employee: ");
+            if ((type = sc.nextLine().trim()).matches("[1-4]")) break;
+            System.out.println(red + "❌ Invalid input! Please enter a number between 1 and 3." + reset);
+        }
         if (type.equals("1")) {
             System.out.println("Display Volunteer");
             StaffMembers.add(insertVolunteer());
@@ -157,63 +154,153 @@ public class Utils {
             System.out.println("Display HourWork");
             StaffMembers.add(insertHourWorked());
             status = green +  "Your Are Add New HourWork Employee Successfully" + reset;
+        }else if (type.equals("4")){
+            return;
         }
         System.out.println(status);
     }
     private static StaffMember insertVolunteer() {
         System.out.println("Id: " + StaffMember.getCouter());
-        System.out.print("name: ");
-        String name = sc.nextLine();
-        System.out.print("Enter address: ");
-        String address = sc.nextLine();
-        System.out.print("Salary:$ ");
-        double salary = sc.nextDouble();
-        sc.nextLine();
-        return new Volunteer(name, address, salary);
+        String name;
+        while(true) {
+            System.out.print("name: ");
+            name = sc.nextLine();
+            if(name.matches("[a-zA-Z]*")){
+                break;
+            }else {
+                System.out.println(red + "Invalid name. Please try again." + reset);
+            }
+        }
+        String address;
+        while(true) {
+            System.out.print("Enter address: ");
+            address = sc.nextLine();
+            if(address.matches("[a-zA-Z]*")){
+                break;
+            }else {
+                System.out.println(red + "Invalid address. Please try again." + reset);
+            }
+        }
+        String salary;
+        while(true) {
+            System.out.print("Enter salary: ");
+            salary = sc.nextLine();
+            if(salary.matches("^[1-9][0-9]*$")) break;
+            System.out.println(red + "Invalid salary. Please try again." + reset);
+        }
+        return new Volunteer(name, address, Double.parseDouble(salary));
     }
     private static StaffMember insertSalariedEmployee(){
         System.out.println("Id: " + StaffMember.getCouter());
-        System.out.print("name: ");
-        String name = sc.nextLine();
-        System.out.print("Enter address: ");
-        String address = sc.nextLine();
-        System.out.print("Enter Bonus: ");
-        double bonus = sc.nextDouble();
-        System.out.print("Enter Salary: ");
-        double slalary  = sc.nextDouble();
-        sc.nextLine();
-        return new SalariedEmployee(name, address, bonus, slalary);
+        String name;
+        while(true) {
+            System.out.print("Enter name: ");
+            name = sc.nextLine();
+            if(name.matches("[a-zA-Z]*")){
+                break;
+            }else {
+                System.out.println(red + "Invalid name. Please try again." + reset);
+            }
+        }
+        String address;
+        while(true) {
+            System.out.print("Enter address: ");
+            address = sc.nextLine();
+            if(address.matches("[a-zA-Z]*")){
+                break;
+            }else {
+                System.out.println(red + "Invalid address. Please try again." + reset);
+            }
+        }
+        String bonus;
+        while(true) {
+            System.out.print("Enter Bonus: ");
+            bonus = sc.nextLine();
+            if(bonus.matches("^[1-9][0-9]*$")){
+                break;
+            }else {
+                System.out.println(red + "Invalid bonus. Please try again." + reset);
+            }
+        }
+        String salary;
+        while(true) {
+            System.out.print("Enter Salary: ");
+            salary = sc.nextLine();
+            if(salary.matches("^[1-9][0-9]*$")){
+                break;
+            }else {
+                System.out.println(red + "Invalid salary. Please try again." + reset);
+            }
+        }
+        return new SalariedEmployee(name, address, Double.parseDouble(bonus), Double.parseDouble(salary));
     }
     public static StaffMember insertHourWorked(){
         System.out.println("Id: " + StaffMember.getCouter());
-        System.out.print("name: ");
-        String name = sc.nextLine();
-        System.out.print("Enter address: ");
-        String address = sc.nextLine();
-        System.out.print("Enter Hour work: ");
-        int hours = sc.nextInt();
-        System.out.print("Enter Rate: ");
-        int rate = sc.nextInt();
-        sc.nextLine();
-        return new HourlySalaryEmployee(name, address, hours, rate);
+        String name;
+        while(true) {
+            System.out.print("Enter name: ");
+            name = sc.nextLine();
+            if(name.matches("[a-zA-Z]*")){
+                break;
+            }else {
+                System.out.println(red + "Invalid name. Please try again." + reset);
+            }
+        }
+        String address;
+        while(true) {
+            System.out.print("Enter address: ");
+            address = sc.nextLine();
+            if(address.matches("[a-zA-Z]*")){
+                break;
+            }else {
+                System.out.println(red + "Invalid address. Please try again." + reset);
+            }
+        }
+        String hours;
+        while(true) {
+            System.out.print("Enter Hour work: ");
+            hours = sc.nextLine();
+            if(hours.matches("^[1-9][0-9]*$")){
+                break;
+            }else {
+                System.out.println(red + "Invalid hours. Please try again." + reset);
+            }
+        }
+        String rate;
+        while(true) {
+            System.out.print("Enter Rate: ");
+            rate = sc.nextLine();
+            if(rate.matches("^[1-9][0-9]*$")){
+                break;
+            }else {
+                System.out.println(red + "Invalid rate. Please try again." + reset);
+            }
+        }
+        return new HourlySalaryEmployee(name, address,Integer.parseInt(hours), Double.parseDouble(rate));
     }
     public static void DeleteEmployee(List<StaffMember> StaffMembers){
         System.out.print("Enter id to delete: ");
-        int id = Integer.parseInt(sc.nextLine());
+        String id = sc.nextLine();
+        while (true) {
+            if(id.matches("[0-9]*")){
+                break;
+            }else {
+                System.out.println(red + "Invalid id. Please try again." + reset);
+            }
+        }
         Iterator<StaffMember> interator = StaffMembers.iterator();
         while(interator.hasNext()){
             StaffMember staffMember = interator.next();
-            if(staffMember.getId() == id){
+            if(staffMember.getId() == Integer.parseInt(id)){
                 StaffMembers.remove(staffMember);
-                status = green + "Employee: " + red + "[" + id + "]" + blue + " Has Been Deleted Successfully" + reset;
+                status = green + "Employee: " + red + "[ " + id + " ]" + blue + " Has Been Deleted Successfully" + reset;
                 break;
             }else{
-                System.out.println("Not found");
+                 status = yellow + "Not found" + red + "[ " + id + " ]" + blue + " Please try again." + reset;
             }
         }
         for(i = 0; i<StaffMembers.size(); i++ ){
             StaffMember staffMember = StaffMembers.get(i);
-
         }
         System.out.println(status);
     }
